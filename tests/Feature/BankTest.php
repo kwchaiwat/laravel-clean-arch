@@ -45,6 +45,7 @@ class BankTest extends TestCase
 
         $this->assertDatabaseHas('banks', $attributes);
 
+        $this->get('/api/v1/banks')->assertSee($attributes['account_number']);
     }
 
 }
