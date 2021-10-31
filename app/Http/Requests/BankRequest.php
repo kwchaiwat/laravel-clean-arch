@@ -3,10 +3,18 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
 class BankRequest extends FormRequest
 {
+    /**
+     * Redirect route when errors occur.
+     *
+     * @var string
+     */
+    protected $redirectRoute = 'errors';
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -29,22 +37,30 @@ class BankRequest extends FormRequest
             'trust' => 'required|numeric',
         ];
     }
+
     /**
-     * Custom error messages
+     * Get the error messages for the defined validation rules.
+     *
      * @return array
      */
     public function messages()
     {
         return [
-            'born_date.before' => 'Sorry, but you\'re too young to join.',
-            'born_date.date_format' => 'Your birth date isn\'t a valid date.',
+            'account_number.required' => 'A account_number is required',
+            'trust.required'  => 'A trust is required',
         ];
     }
 
-    public function after($validator)
+    /**
+     * Get the error messages for the defined validation rules.*
+     * @return array
+     */
+    protected function failedValidation(Validator $validator)
     {
-        if ($this->somethingElseIsInvalid()) {
-            $validator->errors()->add('field', 'Something is wrong with this field!');
-        }
+        throw new HttpResponseException(response()->json([
+            'errors' => $validator->errors(),
+            'status' => true,
+        ], 422));
     }
+
 }

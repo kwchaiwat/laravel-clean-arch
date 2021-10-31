@@ -6,6 +6,7 @@ use App\Http\Requests\BankRequest;
 use App\Http\Resources\BankCollection;
 use App\Http\Resources\BankResource;
 use App\Repositories\Bank\BankRepository;
+use Illuminate\Support\Facades\Session;
 
 class BankController extends Controller
 {
@@ -27,6 +28,8 @@ class BankController extends Controller
     }
 
     public function create(BankRequest $request){
+        $validator = $request->validated();
+
         $bank =  $this->bank->create($request->safe()->only('account_number', 'trust'));
         return new BankResource($bank);
     }
