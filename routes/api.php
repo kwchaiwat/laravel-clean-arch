@@ -36,6 +36,9 @@ Route::prefix('v1')->name('v1')->group(function () {
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/banks', [BankController::class, 'getAllBanks']);
+
+        Route::post('/banks', [BankController::class, 'create']);
+
         Route::get('/banks/{id}', [BankController::class, 'getBank']);
     });
 

@@ -21,4 +21,8 @@ class BankController extends Controller
     public function getBank($id){
         return $this->bank->getById($id);
     }
+
+    public function create(){
+        return $this->bank->create(request()->only('account_number', 'trust'));
+    }
 }
