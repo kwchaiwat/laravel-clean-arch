@@ -13,17 +13,15 @@ class UserRepositoryImpl implements UserRepository
         $this->model = $model;
     }
 
-    public function login() {
-        $credentials = request()->only(['email', 'password']);
-        auth()->validate($credentials);
-
+    public function login($credentials)
+    {
         if (!auth()->validate($credentials)) {
             abort(401);
         } else {
             $user = $this->model->where('email', $credentials['email'])->first();
             $user->tokens()->delete();
             $token = $user->createToken('postman');
-            return response()->json(['$token' => $token->plainTextToken]);
+            return $token->plainTextToken;
         }
         return abort(500);
     }
@@ -36,20 +34,5 @@ class UserRepositoryImpl implements UserRepository
     public function getById($id)
     {
         return $this->model->findOrFaill($id);
-    }
-
-    public function create(array $attributes)
-    {
-        // TODO: Implement create() method.
-    }
-
-    public function update($id, array $attributes)
-    {
-        // TODO: Implement update() method.
-    }
-
-    public function delete($id)
-    {
-        // TODO: Implement delete() method.
     }
 }
